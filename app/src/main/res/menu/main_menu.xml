@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:myapp="http://schemas.android.com/apk/res-auto" >
+    <item
+        android:icon="@drawable/ic_calendar"
+        myapp:showAsAction="always"
+        android:title="@string/action_change_date"
+        android:id="@+id/action_choose_date_plan"/>
+</menu>

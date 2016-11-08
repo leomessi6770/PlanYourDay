@@ -2,4 +2,5 @@
     <string name="app_name">Plan Your Day</string>
     <string name="btn_change_date_plan">Change date</string>
     <string name="tv_date_plan">dd/MM/yyyy</string>
+    <string name="action_change_date">Change date</string>
 </resources>

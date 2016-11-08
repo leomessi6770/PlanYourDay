@@ -1,8 +1,12 @@
 package com.example.puyed.planyourday;
 
 import android.app.DatePickerDialog;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -14,10 +18,11 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    TextView tvDatePlan;
-    Button   btnChangeDatePlan;
-    CustomDate mCurSelectedDate = new CustomDate();
-    DatePickerDialog.OnDateSetListener mDatePickerListener;
+    //private TextView tvDatePlan;
+    //private Button   btnChangeDatePlan;
+    private CustomDate mCurSelectedDate = new CustomDate();
+    private DatePickerDialog.OnDateSetListener mDatePickerListener;
+    private ActionBar                          mActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +30,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Get needed controls object
-        tvDatePlan = (TextView) findViewById(R.id.tvDatePlan);
-        btnChangeDatePlan = (Button) findViewById(R.id.btnChangeDatePlan);
+        //tvDatePlan = (TextView) findViewById(R.id.tvDatePlan);
+        //btnChangeDatePlan = (Button) findViewById(R.id.btnChangeDatePlan);
 
         // Set current date to tvDatePlan
-        tvDatePlan.setText(getCurrentDate("vi", mCurSelectedDate));
+        //tvDatePlan.setText(getCurrentDate("vi", mCurSelectedDate));
+
+
+        // Get action bar; Set action bar title to current date
+        mActionBar = getSupportActionBar();
+        mActionBar.setTitle(getCurrentDate("vi", mCurSelectedDate));
 
         // Set the callback when user click ok:
         mDatePickerListener = new DatePickerDialog.OnDateSetListener() {
@@ -48,12 +58,37 @@ public class MainActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, monthOfYear, dayOfMonth);
                 String day = getDayOfWeekInVi(calendar.get(Calendar.DAY_OF_WEEK));
-                if (day == null)
-                    tvDatePlan.setText(String.format("%d/%d/%d", dayOfMonth, (monthOfYear + 1), year));
-                else
-                    tvDatePlan.setText(String.format("%s, %d/%d/%d", day, dayOfMonth, (monthOfYear + 1), year));
+                if (day == null) {
+                    //tvDatePlan.setText(String.format("%d/%d/%d", dayOfMonth, (monthOfYear + 1), year));
+                    mActionBar.setTitle(String.format("%d/%d/%d", dayOfMonth, (monthOfYear + 1), year));
+                }
+                else {
+                    //tvDatePlan.setText(String.format("%s, %d/%d/%d", day, dayOfMonth, (monthOfYear + 1), year));
+                    mActionBar.setTitle(String.format("%s, %d/%d/%d", day, dayOfMonth, (monthOfYear + 1), year));
+                }
             }
         };
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_choose_date_plan : {
+                // Show calendar picker
+                new DatePickerDialog(MainActivity.this, mDatePickerListener, mCurSelectedDate.getYear(), mCurSelectedDate.getMonth(), mCurSelectedDate.getDayOfMonth()).show();
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
     // Get current date with format "d dd/MM/yyyy", with d is date-of-week show by language, which "vi" is Vietnamese
@@ -111,8 +146,7 @@ public class MainActivity extends AppCompatActivity {
         return dayInStr;
     }
 
-    public void onClickBtnChangeDatePlan(View view) {
-        // Show calendar picker
-        new DatePickerDialog(MainActivity.this, mDatePickerListener, mCurSelectedDate.getYear(), mCurSelectedDate.getMonth(), mCurSelectedDate.getDayOfMonth()).show();
-    }
+//    public void onClickBtnChangeDatePlan(View view) {
+//
+//    }
 }
